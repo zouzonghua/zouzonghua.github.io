@@ -1,3 +1,3 @@
 # homepage
 
-https://zouzonghua.github.io/homepage/
+https://zouzonghua.github.io/
