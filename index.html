@@ -1,14 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zonghua's homepage</title>
-</head>
-<body>
-  <ul>
-    <li><a href="https://zouzonghua.github.io/blog/">blog</a></li>
-  </ul>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zonghua's homepage</title>
+    <style>
+      /*==================== VARIABLES CSS ====================*/
+      :root {
+        /*========== Colors ==========*/
+        --dark-mode-bg-color: #121212;
+        --light-mode-bg-color: #f7f8f9;
+      }
+
+      /*==================== BASE ====================*/
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+
+      a {
+        text-decoration: none;
+        color: #555;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 88px;
+        background: var(--light-mode-bg-color);
+        color: #555;
+      }
+
+      /*=============== THEME ===============*/
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: var(--dark-mode-bg-color);
+        }
+        a {
+          color: white;
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        body {
+          background: var(--light-mode-bg-color);
+        }
+        a {
+          color: #555;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      <li><a href="https://zouzonghua.github.io/blog/">blog</a></li>
+    </ul>
+  </body>
 </html>
