@@ -1,82 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" />
     <title>zonghua</title>
-    <style>
-      /*==================== VARIABLES CSS ====================*/
-      :root {
-        /*========== Colors ==========*/
-        --dark-mode-bg-color: #121212;
-        --light-mode-bg-color: #f7f8f9;
-      }
-
-      /*==================== BASE ====================*/
-      * {
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-      }
-      html {
-        height: 100%;
-      }
-      body {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: space-around;
-        color: #555;
-        background: var(--light-mode-bg-color);
-      }
-
-      div {
-        margin: 0 auto;
-      }
-
-      ul {
-        padding: 30px;
-      }
-
-      a {
-        text-decoration: none;
-        color: #555;
-      }
-
-
-      /*=============== THEME ===============*/
-
-      @media (prefers-color-scheme: dark) {
-        body {
-          background: var(--dark-mode-bg-color);
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'wave': 'wave 2.5s infinite'
+                    },
+                    keyframes: {
+                        wave: {
+                            '0%': { transform: 'rotate(0.0deg)' },
+                            '10%': { transform: 'rotate(14.0deg)' },
+                            '20%': { transform: 'rotate(-8.0deg)' },
+                            '30%': { transform: 'rotate(14.0deg)' },
+                            '40%': { transform: 'rotate(-4.0deg)' },
+                            '50%': { transform: 'rotate(10.0deg)' },
+                            '60%': { transform: 'rotate(0.0deg)' },
+                            '100%': { transform: 'rotate(0.0deg)' },
+                        }
+                    }
+                }
+            }
         }
-        a {
-          color: white;
+    </script>
+    <script>
+        // 主题设置
+        const getThemePreference = () => {
+            if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                return localStorage.getItem('theme')
+            }
+            return 'system'
         }
-      }
 
-      @media (prefers-color-scheme: light) {
-        body {
-          background: var(--light-mode-bg-color);
+        const updateTheme = () => {
+            const theme = getThemePreference()
+            const isDark = theme === 'dark' || 
+                (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            
+            document.documentElement.classList.toggle('dark', isDark)
         }
-        a {
-          color: #555;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div>
-      <h1 align="center">Hi <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30">, I'm zonghua : )</h1>
-      <ul>
-        <li><a href="mailto:zouzonghua.cn@gmail.com">mail</a></li>
-        <li><a href="https://github.com/zouzonghua">github</a></li>
-        <li><a href="https://twitter.com/zouzonghuacn">twitter</a></li>
-        <li><a href="https://zouzonghua.cn/homelab-dashboard/">homelab</a></li>
-      </ul>
+
+        // 初始化主题
+        updateTheme()
+
+        // 监听系统主题变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (getThemePreference() === 'system') {
+                updateTheme()
+            }
+        })
+    </script>
+</head>
+<body class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="flex min-h-screen items-center justify-center">
+        <div class="max-w-md w-full p-6 space-y-8">
+            <!-- 主题切换按钮 -->
+            <div class="absolute top-4 right-4">
+                <div class="relative">
+                    <button 
+                        id="theme-toggle"
+                        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+                        aria-label="切换主题"
+                    >
+                        <!-- Light 模式图标 -->
+                        <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <!-- Dark 模式图标 -->
+                        <svg class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                    <!-- 主题选择下拉菜单 -->
+                    <div id="theme-menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                        <div class="py-1" role="menu" aria-orientation="vertical">
+                            <button 
+                                class="theme-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                role="menuitem"
+                                data-theme="light"
+                            >
+                                🌞 Light
+                            </button>
+                            <button 
+                                class="theme-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                role="menuitem"
+                                data-theme="dark"
+                            >
+                                🌙 Dark
+                            </button>
+                            <button 
+                                class="theme-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                role="menuitem"
+                                data-theme="system"
+                            >
+                                💻 System
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h1 class="flex items-center justify-center text-3xl font-bold text-gray-700 dark:text-gray-200">
+                    Hi <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" 
+                        class="w-8 h-8 mx-2 animate-wave" 
+                        alt="waving hand">, 
+                    I'm zonghua : )
+                </h1>
+            </div>
+            
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="mailto:zouzonghua.cn@gmail.com" 
+                           class="flex items-center p-3 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                           aria-label="Send email">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                            mail
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/zouzonghua" 
+                           class="flex items-center p-3 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                           aria-label="Visit GitHub profile">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            github
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/zouzonghuacn" 
+                           class="flex items-center p-3 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                           aria-label="Visit Twitter profile">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                            twitter
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://zouzonghua.cn/homelab-dashboard/" 
+                           class="flex items-center p-3 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                           aria-label="Visit Homelab dashboard">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                            </svg>
+                            homelab
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-  </body>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle')
+        const themeMenu = document.getElementById('theme-menu')
+        const themeOptions = document.querySelectorAll('.theme-option')
+
+        // 切换菜单显示/隐藏
+        themeToggle.addEventListener('click', () => {
+            themeMenu.classList.toggle('hidden')
+        })
+
+        // 点击其他地方关闭菜单
+        document.addEventListener('click', (e) => {
+            if (!themeToggle.contains(e.target) && !themeMenu.contains(e.target)) {
+                themeMenu.classList.add('hidden')
+            }
+        })
+
+        // 主题切换处理
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme
+                localStorage.setItem('theme', theme)
+                updateTheme()
+                themeMenu.classList.add('hidden')
+            })
+        })
+    </script>
+</body>
 </html>
